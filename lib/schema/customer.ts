@@ -10,5 +10,5 @@ export const CustomerSchema = z.object({
     address2: z.string().regex(/^[a-zA-Z0-9 ,.\-]+$/).min(1).max(50).optional(), 
     district: z.string().regex(/^[a-zA-Z]+$/).min(1).max(20), 
     city_id: z.number().gte(1).safe(),
-    postal_code: z.string().min(4).max(10)
+    postal_code: z.string().regex(/^[a-zA-Z0-9 \-]+$/).min(4).max(10)
 }).strict()

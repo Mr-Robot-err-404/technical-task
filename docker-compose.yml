@@ -1,16 +1,15 @@
+ # web:
+  #   container_name: server
+  #   build: . 
+  #   ports:
+  #     - "8000:8000" 
+  #   environment:
+  #     - DATABASE_URL=postgres://postgres:postgres@dvdrental:5432/dvdrental 
+  #     - PASSWORD=postgres
+  #   depends_on:
+  #     - db 
 
 services:
-  web:
-    container_name: server
-    build: . 
-    ports:
-      - "8080:8080" 
-    environment:
-      - DATABASE_URL=postgres://postgres:postgres@dvdrental:5432/dvdrental 
-      - PASSWORD=postgres
-    depends_on:
-      - db 
-
   db:
     container_name: dvdrental
     image: sensoteq/tech-assessment-db:latest
@@ -20,7 +19,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - 8080:5432
 
   pgadmin: 
     image: dpage/pgadmin4:latest
