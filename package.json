@@ -2,16 +2,13 @@
   "name": "postgres-task",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "build": "rimraf dist && tsc",
-    "prestart": "pnpm run build",
-    "start": "node dist/app/server.js",
-    "predev": "pnpm run build",
-    "dev": "concurrently \"tsc -w\" \"nodemon dist/app/server.js\"",
-    "test": "jest --watchAll --verbose"
+    "build": "pnpm exec kysely-codegen && rimraf dist && tsc",
+    "start": "pnpm run build && node dist/app/server.js",
+    "dev": "pnpm run build && concurrently \"tsc -w\" \"nodemon dist/app/server.js\"",
+    "test": "jest --verbose"
   },
-  "keywords": [], 
+  "keywords": [],
   "author": "Harold",
   "license": "ISC",
   "dependencies": {
