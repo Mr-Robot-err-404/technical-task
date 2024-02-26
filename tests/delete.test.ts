@@ -1,6 +1,9 @@
 import app from '../app/app'
 import request from 'supertest'
 import { db } from '../database/db'
+import { Params } from './post.test'
+import { createCustomer } from '../database/repositories/customer/create'
+import { getValidAddress } from '../database/repositories/address/get'
 
 afterAll(async () => {
   await db.destroy()
@@ -36,7 +39,14 @@ describe('deleting a customer by their customer_id', () => {
       })
     })
     test('correct params', async () => {
-      const res = await request(app).delete(`/api/customers/100`)
+      const params = new Params()
+      const unique_user = crypto.randomUUID().split('-')[0]
+      params.email = `${unique_user}@gmail.com`
+
+      const valid_address = await getValidAddress()
+      const new_customer = await createCustomer(params, valid_address?.address_id || 7)
+
+      const res = await request(app).delete(`/api/customers/${new_customer.customer_id}`)
       expect(res.status).toBe(200)
       expect(res.body.message).toBe('customer deleted successfully')
     })

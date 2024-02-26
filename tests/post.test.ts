@@ -1,12 +1,13 @@
 import app from '../app/app'
 import request from 'supertest'
 import { db } from '../database/db'
+import crypto from 'crypto'
 
 afterAll(async () => {
   await db.destroy()
 })
 
-class Params {
+export class Params {
   [key: string]: any
   store_id: number
   first_name: string
@@ -82,6 +83,9 @@ describe('creating a new customer', () => {
     })
 
     test('correct params', async () => {
+      const unique_user = crypto.randomUUID().split('-')[0]
+      params.email = `${unique_user}@gmail.com`
+
       const res = await request(app).post('/api/customers').send(params)
       expect(res.status).toBe(200)
       expect(res.body).toEqual({
