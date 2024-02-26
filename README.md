@@ -11,9 +11,12 @@ All components are built as a single multi-container using the docker-compose.ym
 ### Setup 
 - pnpm install
 - docker compose up
-- Copy the .env.example contents to a .env file
+- copy the .env.example contents to a .env file
 - pnpm build
 - pnpm test
+- access the endpoint at http://localhost:8000
+
+
 
 
 
