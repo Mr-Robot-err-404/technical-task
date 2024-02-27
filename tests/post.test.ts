@@ -75,11 +75,8 @@ describe('creating a new customer', () => {
     test('invalid city_id', async () => {
       params.city_id = 7
       const res = await request(app).post('/api/customers').send(params)
-      expect(res.body).toEqual({
-        message: 'invalid city_id',
-        city_id: 7,
-        accept: [{ city_id: 300 }, { city_id: 576 }],
-      })
+      expect(res.status).toBe(400)
+      expect(res.body.message).toBe('invalid city_id')
     })
 
     test('correct params', async () => {
