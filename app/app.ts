@@ -134,6 +134,12 @@ app.get('/api/films', async (req, res) => {
   }
 })
 
+app.get('/', (req, res) => {
+  res.status(200).json({
+    message: 'technical task is ready',
+  })
+})
+
 app.use((req, res) => {
   res.status(404).json({
     message: "endpoint doesn't exist",
