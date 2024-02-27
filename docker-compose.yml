@@ -7,6 +7,11 @@ services:
       POSTGRES_USER: postgres
     ports:
       - 5432:5432
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-q', '-d', 'dvdrental', '-U', 'postgres']
+      interval: 10s
+      retries: 5
+      timeout: 5s
 
   server:
     container_name: express_server
@@ -18,7 +23,8 @@ services:
       - DB_HOST=db
       - DB_PASSWORD=postgres
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   pgadmin:
     image: dpage/pgadmin4:latest
