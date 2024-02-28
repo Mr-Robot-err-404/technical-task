@@ -16,6 +16,24 @@ All components are built as a single multi-container using the docker-compose.ym
 - pnpm test
 - access the api endpoint at http://localhost:8000
 
+### Endpoint examples
+- curl --location 'localhost:8000/films/category?categoryName=action'
+- curl --location 'localhost:8000/customers' \
+  --header 'Content-Type: application/json' \
+  --data-raw '{
+    "store_id" : 1,
+    "first_name" : "John",
+    "last_name" : "Doe",
+    "email" : "johndoe@gmail.com",
+    "phone" : "0771321480",
+    "address" : "7 Jury Lane",
+    "district" : "Alberta",
+    "city_id" : 300,
+    "postal_code" : "HA-G50"
+  }'
+- curl --location --request DELETE 'localhost:8000/customers/600'
+- curl --location 'localhost:8000/films?title=to&length=60'
+
 ### To view the database at pgadmin: 
 - visit http://localhost:5050
 - login with admin@admin.com : root
