@@ -6,28 +6,38 @@ afterAll(async () => {
   await db.destroy()
 })
 
-describe('fetching films through category_name', () => {
+describe('fetching films through categoryName', () => {
   describe('validation tests', () => {
+    let query = ''
+
+    beforeEach(() => {
+      query = '?categoryName='
+    })
+
+    test('false query', async () => {
+      query += 'example123'
+      const res = await request(app).get(`/films/category${query}`)
+      expect(res.status).toBe(400)
+      expect(res.body.message).toBe('invalid query')
+    })
+
     test('false category', async () => {
-      const res = await request(app).get('/api/films/false_category')
+      query += 'falseCategory'
+      const res = await request(app).get(`/films/category${query}`)
       expect(res.status).toBe(404)
-      expect(res.body).toEqual({
-        message: 'invalid category',
-        category_name: 'false_category',
-      })
+      expect(res.body.message).toBe('invalid category')
     })
-    test('lowercase', async () => {
-      const res = await request(app).get('/api/films/action')
-      expect(res.status).toBe(404)
-      expect(res.body).toEqual({
-        message: 'invalid category',
-        category_name: 'action',
-      })
-    })
-    test('correct category', async () => {
-      const res = await request(app).get('/api/films/Action')
+
+    test('correct query', async () => {
+      query += 'Action'
+      const res = await request(app).get(`/films/category${query}`)
       expect(res.status).toBe(200)
-      expect(res.body.message).toBe('films were fetched successfully')
+    })
+
+    test('correct query with lowercase', async () => {
+      query += 'action'
+      const res = await request(app).get(`/films/category${query}`)
+      expect(res.status).toBe(200)
     })
   })
 })

@@ -4,20 +4,20 @@ interface Props {
   name: string
 }
 
-export function isCategoryValid(category_name: string, arr: Props[]): boolean {
+export function isCategoryValid(categoryName: string, arr: Props[]): boolean {
   for (let i = 0; i < arr.length; i++) {
     const curr = arr[i].name
-    if (curr === category_name) {
+    if (curr === categoryName) {
       return true
     }
   }
   return false
 }
 
-export function findCategoryId(category_name: string, arr: Props[]): number {
+export function findCategoryId(categoryName: string, arr: Props[]): number {
   for (let i = 0; i < arr.length; i++) {
     const curr = arr[i].name
-    if (curr === category_name) {
+    if (curr === categoryName) {
       return arr[i].category_id
     }
   }

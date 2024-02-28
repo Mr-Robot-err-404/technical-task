@@ -33,7 +33,7 @@ describe('searching films with an optional length and title', () => {
     const testCases = [
       {
         description: 'empty query',
-        curr_query: {
+        currQuery: {
           title: undefined,
           length: undefined,
         },
@@ -41,24 +41,24 @@ describe('searching films with an optional length and title', () => {
       },
       {
         description: 'title with special characters',
-        curr_query: {
+        currQuery: {
           title: 'st@r w@rs',
           length: length,
         },
       },
       {
         description: 'non-integer length',
-        curr_query: {
+        currQuery: {
           title: title,
           length: 'length_string',
         },
       },
     ]
 
-    testCases.forEach(({ description, curr_query, message }) => {
+    testCases.forEach(({ description, currQuery, message }) => {
       test(description, async () => {
-        const query = createQuery(curr_query.title, curr_query.length)
-        const res = await request(app).get(`/api/films${query}`)
+        const query = createQuery(currQuery.title, currQuery.length)
+        const res = await request(app).get(`/films${query}`)
 
         expect(res.status).toBe(400)
         if (message) {
@@ -69,7 +69,7 @@ describe('searching films with an optional length and title', () => {
 
     test('no search results', async () => {
       const query = createQuery('Lord of the Rings', '30')
-      const res = await request(app).get(`/api/films${query}`)
+      const res = await request(app).get(`/films${query}`)
 
       expect(res.status).toBe(404)
       expect(res.body.message).toBe('no matching search results')
@@ -77,11 +77,10 @@ describe('searching films with an optional length and title', () => {
 
     test('correct params', async () => {
       const query = createQuery(title, length)
-      const res = await request(app).get(`/api/films${query}`)
+      const res = await request(app).get(`/films${query}`)
 
       expect(res.status).toBe(200)
-      expect(res.body.message).toBe('films fetched successfully')
-      expect(res.body.films.length).toBe(8)
+      expect(res.body.length).toBe(8)
     })
   })
 })

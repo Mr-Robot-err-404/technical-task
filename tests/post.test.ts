@@ -3,11 +3,7 @@ import request from 'supertest'
 import { db } from '../database/db'
 import crypto from 'crypto'
 
-afterAll(async () => {
-  await db.destroy()
-})
-
-export class Params {
+export interface Params {
   [key: string]: any
   store_id: number
   first_name: string
@@ -16,35 +12,39 @@ export class Params {
   phone: any
   address: any
   address2?: any
-  district: any
+  district: string
   city_id: number
   postal_code: string
   invalid_field?: any
-
-  constructor() {
-    this.store_id = 1
-    this.first_name = 'John'
-    this.last_name = 'Doe'
-    this.email = 'johndoe@gmail.com'
-    this.phone = '0771321480'
-    this.address = '7 Jury Lane'
-    this.district = 'Alberta'
-    this.city_id = 300
-    this.postal_code = 'HA-G50'
-  }
 }
+
+const DEFAULT_PARAMS: Params = {
+  store_id: 1,
+  first_name: 'John',
+  last_name: 'Doe',
+  email: 'johndoe@gmail.com',
+  phone: '0771321480',
+  address: '7 Jury Lane',
+  district: 'Alberta',
+  city_id: 300,
+  postal_code: 'HA-G50',
+}
+
+afterAll(async () => {
+  await db.destroy()
+})
 
 describe('creating a new customer', () => {
   describe('validation tests', () => {
     let params: any
 
     beforeEach(() => {
-      params = new Params()
+      params = { ...DEFAULT_PARAMS }
     })
 
     test('missing params', async () => {
       delete params.last_name
-      const res = await request(app).post('/api/customers').send(params)
+      const res = await request(app).post('/customers').send(params)
       expect(res.status).toBe(400)
       expect(res.body.message).toBe('invalid request')
     })
@@ -62,10 +62,8 @@ describe('creating a new customer', () => {
       ]
       testCases.forEach(({ field, value, description }) => {
         test(description, async () => {
-          let testParams = { ...params }
-          testParams[field] = value
-
-          const res = await request(app).post('/api/customers').send(testParams)
+          const testParams = { ...DEFAULT_PARAMS, [field]: value }
+          const res = await request(app).post('/customers').send(testParams)
           expect(res.status).toBe(400)
           expect(res.body.message).toBe('invalid request')
         })
@@ -74,19 +72,18 @@ describe('creating a new customer', () => {
 
     test('invalid city_id', async () => {
       params.city_id = 7
-      const res = await request(app).post('/api/customers').send(params)
+      const res = await request(app).post('/customers').send(params)
       expect(res.status).toBe(400)
       expect(res.body.message).toBe('invalid city_id')
     })
 
     test('correct params', async () => {
-      const unique_user = crypto.randomUUID().split('-')[0]
-      params.email = `${unique_user}@gmail.com`
+      const uniqueUser = crypto.randomUUID().split('-')[0]
+      params.email = `${uniqueUser}@gmail.com`
 
-      const res = await request(app).post('/api/customers').send(params)
+      const res = await request(app).post('/customers').send(params)
       expect(res.status).toBe(200)
       expect(res.body).toEqual({
-        message: 'new customer created successfully',
         data: params,
       })
     })
@@ -94,7 +91,7 @@ describe('creating a new customer', () => {
     test('email already exists', async () => {
       params.email = 'mary.smith@sakilacustomer.org'
 
-      const res = await request(app).post('/api/customers').send(params)
+      const res = await request(app).post('/customers').send(params)
       expect(res.status).toBe(409)
       expect(res.body).toEqual({
         message: 'email already exists',

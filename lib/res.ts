@@ -4,8 +4,12 @@ interface Data {
   [key: string]: any
 }
 
-export function sendResponse(res: Response, status_code: number, message: string, data: Data) {
-  return res.status(status_code).json({
+export function successResponse(res: Response, data: Data) {
+  return res.status(200).json(data)
+}
+
+export function errorResponse(res: Response, statusCode: number, message: string, data: Data) {
+  res.status(statusCode).json({
     message: message,
     ...data,
   })
