@@ -24,13 +24,13 @@ All components are built as a single multi-container using the docker-compose.ym
     "store_id" : 1,
     "first_name" : "John",
     "last_name" : "Doe",
-    "email" : "johndoe@gmail.com",
+    "email" : "doejohn@gmail.com",
     "phone" : "0771321480",
-    "address" : "7 Jury Lane",
+    "address" : "72 Jury Lane",
     "district" : "Alberta",
     "city_id" : 300,
-    "postal_code" : "HA-G50"
-  }'
+    "postal_code" : "HA-G30"
+}'
 - curl --location --request DELETE 'localhost:8000/customers/70'
 - curl --location 'localhost:8000/films?title=to&length=60'
 
