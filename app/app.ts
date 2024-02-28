@@ -3,7 +3,11 @@ import { getFilms } from '../database/repositories/film/get'
 import { getCategoryID } from '../database/repositories/category'
 import { CustomerSchema } from '../lib/schema/customer'
 import { getCityIDs } from '../database/repositories/city'
-import { getCustomer, getCustomers, getSingleCustomer } from '../database/repositories/customer/get'
+import {
+  getCustomer,
+  getCustomers,
+  getSingleCustomer,
+} from '../database/repositories/customer/get'
 import { createCustomer } from '../database/repositories/customer/create'
 import { isCityId } from '../lib/isCityId'
 import { createAddress } from '../database/repositories/address/create'
@@ -28,15 +32,17 @@ app.get('/films/category', async (req, res) => {
       return errorResponse(res, 400, 'invalid query', { query })
     }
     const categoryName = validation.data.categoryName
-    const categoryID = await getCategoryID(categoryName)
+    const { category_id } = (await getCategoryID(categoryName)) ?? {}
 
-    if (typeof categoryID?.category_id !== 'number') {
+    if (typeof category_id !== 'number') {
       return errorResponse(res, 404, 'invalid category', { categoryName })
     }
-    const films = await getFilms(categoryID.category_id)
+    const films = await getFilms(category_id)
 
     if (films.length === 0) {
-      return errorResponse(res, 404, 'no films were found with that category', { categoryName })
+      return errorResponse(res, 404, 'no films were found with that category', {
+        categoryName,
+      })
     }
     return successResponse(res, films)
   } catch (error) {
@@ -50,7 +56,10 @@ app.post('/customers', async (req, res) => {
   const validation = CustomerSchema.safeParse(params)
 
   if (!validation.success) {
-    return errorResponse(res, 400, 'invalid request', { issues: validation.error.issues, params })
+    return errorResponse(res, 400, 'invalid request', {
+      issues: validation.error.issues,
+      params,
+    })
   }
   const { data } = validation
 
@@ -58,12 +67,17 @@ app.post('/customers', async (req, res) => {
     const validCityIDs = await getCityIDs()
 
     if (!isCityId(validCityIDs, data.city_id)) {
-      return errorResponse(res, 400, 'invalid city_id', { city_id: data.city_id, accept: validCityIDs })
+      return errorResponse(res, 400, 'invalid city_id', {
+        city_id: data.city_id,
+        accept: validCityIDs,
+      })
     }
     const existingCustomer = await getSingleCustomer(data.email)
 
     if (existingCustomer.length > 0) {
-      return errorResponse(res, 409, 'email already exists', { email: data.email })
+      return errorResponse(res, 409, 'email already exists', {
+        email: data.email,
+      })
     }
     const addressID = await createAddress(data)
     await createCustomer(data, addressID)
@@ -82,7 +96,10 @@ app.delete('/customers/:customerID', async (req, res) => {
   const validation = Schema.safeParse(params)
 
   if (!validation.success || customerID > Number.MAX_SAFE_INTEGER) {
-    return errorResponse(res, 400, 'invalid request', { params, accept: 'integer' })
+    return errorResponse(res, 400, 'invalid request', {
+      params,
+      accept: 'integer',
+    })
   }
   try {
     const curr = await getCustomer(customerID)
@@ -107,7 +124,12 @@ app.get('/films', async (req, res) => {
   const query = req.query
 
   if (!query.title && !query.length) {
-    return errorResponse(res, 400, 'query params should include a title or length', { query })
+    return errorResponse(
+      res,
+      400,
+      'query params should include a title or length',
+      { query }
+    )
   }
   const validation = SearchSchema.safeParse(query)
 
