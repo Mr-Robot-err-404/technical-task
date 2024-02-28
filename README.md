@@ -31,8 +31,11 @@ All components are built as a single multi-container using the docker-compose.ym
     "city_id" : 300,
     "postal_code" : "HA-G50"
   }'
-- curl --location --request DELETE 'localhost:8000/customers/600'
+- curl --location --request DELETE 'localhost:8000/customers/70'
 - curl --location 'localhost:8000/films?title=to&length=60'
+
+
+Note: The search endpoint may return more than 6 results in the example if tests have been run
 
 ### To view the database at pgadmin: 
 - visit http://localhost:5050
