@@ -14,7 +14,19 @@ All components are built as a single multi-container using the docker-compose.ym
 - copy the .env.example contents to a .env file
 - pnpm build
 - pnpm test
-- access the endpoint at http://localhost:8000
+- access the api endpoint at http://localhost:8000
+
+### To view the database at pgadmin: 
+- visit http://localhost:5050
+- login with admin@admin.com : root
+- create a new server:
+     - hostname: dvdrental
+     - maintenance database: postgres
+     - port: 5432
+     - username: postgres
+     - password: postgres
+ 
+
 
 
 
