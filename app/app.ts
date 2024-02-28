@@ -1,7 +1,6 @@
 import express from 'express'
 import { getFilms } from '../database/repositories/film/get'
-import { getCategories, getCategoryID } from '../database/repositories/category'
-import { findCategoryId, isCategoryValid } from '../lib/category'
+import { getCategoryID } from '../database/repositories/category'
 import { CustomerSchema } from '../lib/schema/customer'
 import { getCityIDs } from '../database/repositories/city'
 import { getCustomer, getCustomers, getSingleCustomer } from '../database/repositories/customer/get'
